@@ -34,46 +34,46 @@ async fn main() {
     println!("{quote_response:#?}");
 
     // POST /swap
-    let swap_response = jupiter_swap_api_client
-        .swap(
-            &SwapRequest {
-                user_public_key: TEST_WALLET,
-                quote_response: quote_response.clone(),
-                config: TransactionConfig::default(),
-            },
-            None,
-        )
-        .await
-        .unwrap();
+    // let swap_response = jupiter_swap_api_client
+    //     .swap(
+    //         &SwapRequest {
+    //             user_public_key: TEST_WALLET,
+    //             quote_response: quote_response.clone(),
+    //             config: TransactionConfig::default(),
+    //         },
+    //         None,
+    //     )
+    //     .await
+    //     .unwrap();
 
-    println!("Raw tx len: {}", swap_response.swap_transaction.len());
+    // println!("Raw tx len: {}", swap_response.swap_transaction.len());
 
-    let versioned_transaction: VersionedTransaction =
-        bincode::deserialize(&swap_response.swap_transaction).unwrap();
+    // let versioned_transaction: VersionedTransaction =
+    //     bincode::deserialize(&swap_response.swap_transaction).unwrap();
 
-    // Replace with a keypair or other struct implementing signer
-    let null_signer = NullSigner::new(&TEST_WALLET);
-    let signed_versioned_transaction =
-        VersionedTransaction::try_new(versioned_transaction.message, &[&null_signer]).unwrap();
+    // // Replace with a keypair or other struct implementing signer
+    // let null_signer = NullSigner::new(&TEST_WALLET);
+    // let signed_versioned_transaction =
+    //     VersionedTransaction::try_new(versioned_transaction.message, &[&null_signer]).unwrap();
 
-    // send with rpc client...
-    let rpc_client = RpcClient::new("https://api.mainnet-beta.solana.com".into());
+    // // send with rpc client...
+    // let rpc_client = RpcClient::new("https://api.mainnet-beta.solana.com".into());
 
-    // This will fail with "Transaction signature verification failure" as we did not really sign
-    let error = rpc_client
-        .send_and_confirm_transaction(&signed_versioned_transaction)
-        .await
-        .unwrap_err();
-    println!("{error}");
+    // // This will fail with "Transaction signature verification failure" as we did not really sign
+    // let error = rpc_client
+    //     .send_and_confirm_transaction(&signed_versioned_transaction)
+    //     .await
+    //     .unwrap_err();
+    // println!("{error}");
 
-    // POST /swap-instructions
-    let swap_instructions = jupiter_swap_api_client
-        .swap_instructions(&SwapRequest {
-            user_public_key: TEST_WALLET,
-            quote_response,
-            config: TransactionConfig::default(),
-        })
-        .await
-        .unwrap();
-    println!("swap_instructions: {swap_instructions:?}");
+    // // POST /swap-instructions
+    // let swap_instructions = jupiter_swap_api_client
+    //     .swap_instructions(&SwapRequest {
+    //         user_public_key: TEST_WALLET,
+    //         quote_response,
+    //         config: TransactionConfig::default(),
+    //     })
+    //     .await
+    //     .unwrap();
+    // println!("swap_instructions: {swap_instructions:?}");
 }
